@@ -61,3 +61,6 @@ Upload request should come with headers to be validated, for instance X-API-KEY,
 
 P.S. clientbodyinfileonly incompatible with multi-part data upload, so you can use it via XMLHttpRequest2 (without multi-part) and binary data upload only
 
+
+#Based on : https://coderwall.com/p/swgfvw/nginx-direct-file-upload-without-passing-them-through-backend
+#And inspired by : http://stackoverflow.com/questions/36429470/nginx-file-upload-with-client-body-in-file-only
