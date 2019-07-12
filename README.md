@@ -24,8 +24,8 @@ To be honest I can see no problem due to small file size upload. But what if you
 
 ## How to use
 The best and production-ready solution is the last one, clientbodyinfileonly. Due to lack of documentation nobody uses it, but let me share with experience how to setup it. First of all you need to use premature authentication before file uploading is started - Basic HTTP Authentication (shared password) or httpauthrequest module (for back-end authentication through headers). Then update nginx configuration with the following config:
-
-> location /upload {
+```
+location /upload {
         limit_except POST              { deny all; }
         client_body_temp_path          /tmp/nginx; //depend on where your whan to save file
         client_body_in_file_only       on;
@@ -38,7 +38,7 @@ The best and production-ready solution is the last one, clientbodyinfileonly. Du
         proxy_pass                     http://localhost:8080/; //or another adress refencer to ur middleware
         proxy_redirect                 off;
         }
-        
+```  
 Once you reload nginx, the new URL /upload is ready to accept file upload without any back-end interaction, it all goes through nginx and send callback to http://localhost:8080/ with file name in X-FILE header. It's all, easy?
 
 You already know the file name before you make POST request, so you should preserve it until the back-end receive it. We do use extra headers with POST that pass through Nginx proxy and comes to back-end unmodified. For instance, having X-NAME headers from initial requests help you to catch it up on backend.
