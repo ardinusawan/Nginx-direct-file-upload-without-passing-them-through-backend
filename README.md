@@ -44,23 +44,25 @@ Once you reload nginx, the new URL /upload is ready to accept file upload withou
 You already know the file name before you make POST request, so you should preserve it until the back-end receive it. We do use extra headers with POST that pass through Nginx proxy and comes to back-end unmodified. For instance, having X-NAME headers from initial requests help you to catch it up on backend.
 
 If you need to have back-end authentication, only way to handle is to use auth_request, for instance:
-> location = /upload {
+```
+location = /upload {
   auth_request               /upload/authenticate;
   ...
-    }
-
+}
+```
 And
-
-> location = /upload/authenticate {
+```
+location = /upload/authenticate {
   internal;
   proxy_set_body             off;
   proxy_pass                 http://backend;
 }
-
+```
 Upload request should come with headers to be validated, for instance X-API-KEY, once authentication is finished, Nginx started to file uploading and pass the file name to backend afterward. It's internal cascade of requests, so you have to do only one request with file BODY and authentication headers. The good news that auth_request module will be incorporated in the Nginx core soon, so we can use it without ./configure ... --add-module=/tmp/ngxhttpauth_request
 
 P.S. clientbodyinfileonly incompatible with multi-part data upload, so you can use it via XMLHttpRequest2 (without multi-part) and binary data upload only
 
 
-#Based on : https://coderwall.com/p/swgfvw/nginx-direct-file-upload-without-passing-them-through-backend
-#And inspired by : http://stackoverflow.com/questions/36429470/nginx-file-upload-with-client-body-in-file-only
+## Based on : 
+- https://coderwall.com/p/swgfvw/nginx-direct-file-upload-without-passing-them-through-backend
+- http://stackoverflow.com/questions/36429470/nginx-file-upload-with-client-body-in-file-only
